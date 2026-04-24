@@ -1,5 +1,22 @@
 <?= $this->include('admin/layout/header') ?>
 
+<?php
+function format_indo($date) {
+    if (!$date) return '-';
+    $days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+    $months = [
+        1 => 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+        'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+    ];
+    $timestamp = strtotime($date);
+    $day = $days[date('w', $timestamp)];
+    $d = date('d', $timestamp);
+    $m = $months[(int)date('m', $timestamp)];
+    $y = date('Y', $timestamp);
+    return "$day, $d $m $y";
+}
+?>
+
 <!-- Header Section -->
 <div class="row mb-5 mt-2">
     <div class="col-12">
@@ -100,7 +117,7 @@
                         <div class="small fw-800 text-dark mb-1"><?= esc($t['keperluan']) ?></div>
                         <div class="extra-small text-muted text-truncate mb-2" style="max-width:180px;" title="<?= esc($t['keterangan']) ?>"><?= esc($t['keterangan'] ?? '-') ?></div>
                         <div class="extra-small d-flex gap-2">
-                            <span class="text-secondary"><i class="bi bi-calendar-event me-1"></i><?= date('d/m/y', strtotime($t['created_at'])) ?></span>
+                            <span class="text-secondary"><i class="bi bi-calendar-event me-1"></i><?= format_indo($t['created_at']) ?></span>
                             <span class="text-secondary"><i class="bi bi-clock me-1"></i><?= date('H:i', strtotime($t['created_at'])) ?></span>
                         </div>
                     </td>
