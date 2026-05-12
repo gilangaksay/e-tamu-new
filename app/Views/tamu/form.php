@@ -107,11 +107,8 @@
                                 <label class="form-label">Asal Instansi / Organisasi</label>
                                 <input type="text" name="instansi" class="form-control" placeholder="Nama kantor atau pribadi">
                             </div>
-                            <div class="mb-4">
-                                <label class="form-label">Orang yang Dituju</label>
-                                <input type="text" name="tujuan_orang" class="form-control" placeholder="Nama pegawai yang ingin ditemui" required>
-                            </div>
-                            <div class="mb-4">
+
+                             <div class="mb-4">
                                 <label class="form-label">Apa Keperluan Anda?</label>
                                 <select name="keperluan" class="form-select" required>
                                     <option value="" disabled selected>Pilih salah satu...</option>
@@ -160,9 +157,7 @@
                                 </div>
                                 <button type="submit" class="btn-modern w-100 py-3 text-uppercase fw-800 tracking-wider shadow-lg">Konfirmasi Kedatangan</button>
                                 
-                                <div class="text-center mt-4">
-                                    <a href="<?= site_url('admin/login') ?>" class="text-muted small text-decoration-none fw-bold"><i class="bi bi-person-badge me-1"></i> Panel Administrator</a>
-                                </div>
+
                             </div>
                         </div>
                     </form>

@@ -49,15 +49,16 @@
             <tr>
                 <th width="30">No</th>
                 <th width="80">Waktu</th>
-                <th width="150">Nama Pengunjung</th>
-                <th width="150">Instansi / Alamat</th>
+                <th width="120">Nama Pengunjung</th>
+                <th width="120">Instansi / Alamat</th>
+                <th width="120">Tujuan (Karyawan)</th>
                 <th>Keperluan / Rincian</th>
                 <th width="80">Status</th>
             </tr>
         </thead>
         <tbody>
             <?php if(empty($laporanTamu)): ?>
-                <tr><td colspan="6" style="text-align:center;">Tidak ada data kunjungan pada periode ini.</td></tr>
+                <tr><td colspan="7" style="text-align:center;">Tidak ada data kunjungan pada periode ini.</td></tr>
             <?php endif; ?>
             <?php $no = 1; foreach($laporanTamu as $t): ?>
             <tr>
@@ -65,7 +66,16 @@
                 <td><?= date('d/m/y H:i', strtotime($t['created_at'])) ?></td>
                 <td><b><?= esc($t['nama']) ?></b><br><small>NIK: <?= esc($t['no_identitas']) ?></small></td>
                 <td><?= esc($t['instansi'] ?? '-') ?></td>
-                <td><b><?= esc($t['keperluan']) ?></b><br><?= esc($t['keterangan'] ?? '-') ?></td>
+                <td><?= esc($t['tujuan_orang'] ?? '-') ?></td>
+                <td>
+                    <?php if(str_starts_with($t['keperluan'], 'Lainnya: ')): ?>
+                        <b>Lainnya</b><br>
+                        <i style="color: #4f46e5;"><?= esc(substr($t['keperluan'], 9)) ?></i>
+                    <?php else: ?>
+                        <b><?= esc($t['keperluan']) ?></b>
+                    <?php endif; ?>
+                    <br><?= esc($t['keterangan'] ?? '-') ?>
+                </td>
                 <td style="text-align:center; text-transform:uppercase;"><?= esc($t['status']) ?></td>
             </tr>
             <?php endforeach; ?>

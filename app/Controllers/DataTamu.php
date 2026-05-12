@@ -23,17 +23,18 @@ class DataTamu extends BaseController {
     public function update() {
         $data = $this->request->getPost();
         
-        // Jika role petugas, hapus field identitas agar tidak bisa diubah
+        // Validasi input wajib
+        if (!$this->validate([
+            'no_identitas' => 'required|exact_length[16]|numeric',
+            'no_telp'      => 'required',
+            'nama'         => 'required'
+        ])) {
+            return $this->response->setJSON(['success' => false, 'message' => 'NIK harus 16 digit angka dan data wajib diisi.']);
+        }
+
+        // Jika role petugas, kunci field identitas dan demografi (HANYA boleh ubah tujuan/keperluan)
         if (session()->get('admin_role') === 'petugas') {
-            unset($data['nama'], $data['no_identitas'], $data['no_telp'], $data['instansi'], $data['tujuan_orang'], $data['keperluan']);
-        } else {
-            // Validasi NIK hanya untuk admin (petugas tidak bisa ubah field ini)
-            if (!$this->validate([
-                'no_identitas' => 'required|exact_length[16]|numeric',
-                'no_telp'      => 'required'
-            ])) {
-                return $this->response->setJSON(['success' => false, 'message' => 'NIK harus 16 digit angka.']);
-            }
+            unset($data['nama'], $data['no_identitas'], $data['no_telp'], $data['instansi'], $data['jenis_kelamin'], $data['disabilitas'], $data['usia']);
         }
         
         (new TamuModel())->update($data['id'], $data);

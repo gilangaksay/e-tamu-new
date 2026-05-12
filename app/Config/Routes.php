@@ -26,3 +26,9 @@ $routes->get('admin/export', 'Export::index');
 $routes->get('admin/export/print', 'Export::print');
 
 $routes->get('admin/analitik', 'Analitik::index');
+
+$routes->get('admin/pegawai', 'Pegawai::index');
+$routes->post('admin/pegawai/store', 'Pegawai::store');
+$routes->post('admin/pegawai/update', 'Pegawai::update');
+$routes->post('admin/pegawai/delete', 'Pegawai::delete');
+

@@ -1,6 +1,27 @@
 <?= $this->include('admin/layout/header') ?>
 
+<!-- Tom Select Assets -->
+<link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.bootstrap5.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
+
+
 <div class="row g-4 mb-5 mt-1">
+<?php
+function format_indo($date) {
+    if (!$date) return '-';
+    $days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+    $months = [
+        1 => 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+        'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+    ];
+    $timestamp = strtotime($date);
+    $day = $days[date('w', $timestamp)];
+    $d = date('d', $timestamp);
+    $m = $months[(int)date('m', $timestamp)];
+    $y = date('Y', $timestamp);
+    return "$day, $d $m $y";
+}
+?>
     <div class="col-md-3 col-sm-6">
         <div class="modern-card p-4 bg-white border-0 shadow-sm border-start border-primary border-5 h-100 transition-hover">
             <div class="d-flex align-items-center justify-content-between mb-2">
@@ -55,20 +76,41 @@
     <div class="p-4 bg-light bg-opacity-50 d-flex justify-content-between align-items-center border-bottom">
         <div>
             <h6 class="fw-800 mb-1">Riwayat Kunjungan Mendalam</h6>
-            <p class="text-muted extra-small m-0">Menampilkan data dari <?= date('d M Y', strtotime($tgl_mulai)) ?> s/d <?= date('d M Y', strtotime($tgl_akhir)) ?></p>
+            <p class="text-muted extra-small m-0">
+                <?php if(!empty($tgl_mulai) && !empty($tgl_akhir)): ?>
+                    Menampilkan data dari <?= date('d M Y', strtotime($tgl_mulai)) ?> s/d <?= date('d M Y', strtotime($tgl_akhir)) ?>
+                <?php else: ?>
+                    Menampilkan Semua Data Kunjungan
+                <?php endif; ?>
+                <?php if(!empty($search)): ?>
+                    <span class="badge bg-primary bg-opacity-10 text-primary ms-2 border border-primary border-opacity-10">Pencarian: "<?= esc($search) ?>"</span>
+                <?php endif; ?>
+            </p>
         </div>
+
     </div>
 
     <div id="filterLaporan">
         <div class="p-4 border-bottom bg-white">
             <form class="row g-3">
-                <div class="col-md-5">
-                    <label class="form-label extra-small fw-bold text-dark">Cari Pengunjung</label>
+                <div class="col-md-3">
+                    <label class="form-label extra-small fw-bold text-dark">Cari Nama/NIK Tamu</label>
                     <div class="input-group input-group-sm">
                         <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
-                        <input type="text" name="search" class="form-control border-start-0" placeholder="Nama atau NIK..." value="<?= $search ?? '' ?>">
+                        <input type="text" name="search" class="form-control border-start-0 ps-0" placeholder="Cari..." value="<?= $search ?? '' ?>">
                     </div>
                 </div>
+
+                <div class="col-md-3">
+                    <label class="form-label extra-small fw-bold text-dark">Filter Karyawan</label>
+                    <select name="pegawai_id" id="filter_pegawai" class="rounded-3">
+                        <option value="">Semua Karyawan</option>
+                        <?php foreach($pegawaiList as $p): ?>
+                            <option value="<?= $p['id'] ?>" <?= ($pegawai_id ?? '') == $p['id'] ? 'selected' : '' ?>><?= esc($p['nama']) ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+
                 <div class="col-md-2">
                     <label class="form-label extra-small fw-bold text-dark">Mulai</label>
                     <input type="date" name="tgl_mulai" class="form-control form-control-sm" value="<?= $tgl_mulai ?>">
@@ -77,9 +119,9 @@
                     <label class="form-label extra-small fw-bold text-dark">Akhir</label>
                     <input type="date" name="tgl_akhir" class="form-control form-control-sm" value="<?= $tgl_akhir ?>">
                 </div>
-                <div class="col-md-3 d-flex align-items-end gap-2">
-                    <button type="submit" class="btn btn-primary btn-sm w-100 py-2 fw-800">Filter Data</button>
-                    <a href="<?= site_url('admin/laporan') ?>" class="btn btn-light btn-sm py-2 px-3 fw-800 border" title="Reset"><i class="bi bi-arrow-counterclockwise"></i></a>
+                <div class="col-md-2 d-flex align-items-end gap-1">
+                    <button type="submit" class="btn btn-primary btn-sm w-100 py-2 fw-800">Filter</button>
+                    <a href="<?= site_url('admin/laporan') ?>" class="btn btn-light btn-sm py-2 px-2 fw-800 border" title="Reset"><i class="bi bi-arrow-counterclockwise"></i></a>
                 </div>
 
                 <!-- Filter Tambahan -->
@@ -147,7 +189,7 @@
             <thead>
                 <tr class="bg-light">
                     <th class="ps-4 py-3 border-0 text-muted extra-small text-uppercase fw-800">Antrian</th>
-                    <th class="py-3 border-0 text-muted extra-small text-uppercase fw-800">Identitas Pengunjung</th>
+                    <th class="py-3 border-0 text-muted extra-small text-uppercase fw-800">Profil & Foto</th>
                     <th class="py-3 border-0 text-muted extra-small text-uppercase fw-800">Tujuan & Waktu</th>
                     <th class="pe-4 py-3 border-0 text-muted extra-small text-uppercase fw-800 text-end">Status Akhir</th>
                 </tr>
@@ -164,16 +206,43 @@
                         </div>
                     </td>
                     <td>
-                        <div class="fw-bold text-dark mb-0"><?= esc($t['nama']) ?></div>
-                        <div class="extra-small text-muted"><?= esc($t['no_identitas']) ?></div>
-                        <div class="extra-small text-muted mb-1"><?= esc($t['no_telp'] ?? '-') ?></div>
-                        <span class="badge bg-light text-primary border border-primary border-opacity-10 py-1 px-2" style="font-size:0.6rem;"><?= esc($t['instansi'] ?? 'Pribadi') ?></span>
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="position-relative">
+                                <div class="rounded-circle border-white border-3 shadow-sm overflow-hidden bg-light" style="width:55px; height:55px;">
+                                    <?php if($t['foto']): ?>
+                                        <img src="<?= base_url('uploads/tamu/' . $t['foto']) ?>" class="w-100 h-100 object-fit-cover" onclick="showFoto('<?= base_url('uploads/tamu/' . $t['foto']) ?>')" style="cursor:zoom-in;">
+                                    <?php else: ?>
+                                        <div class="w-100 h-100 d-flex align-items-center justify-content-center text-muted"><i class="bi bi-person-fill fs-4"></i></div>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="fw-800 text-dark mb-0 fs-6"><?= esc($t['nama']) ?></div>
+                                <div class="extra-small text-muted"><i class="bi bi-card-text me-1"></i><?= esc($t['no_identitas']) ?></div>
+                                <div class="extra-small text-muted"><i class="bi bi-whatsapp me-1"></i><?= esc($t['no_telp'] ?? '-') ?></div>
+                                <div class="badge bg-light text-primary mt-1 border border-primary border-opacity-10" style="font-size:0.6rem;"><?= esc($t['instansi'] ?? 'Pribadi') ?></div>
+                                <div class="badge bg-light text-success mt-1 border border-success border-opacity-10" style="font-size:0.6rem;"><i class="bi bi-person-fill me-1"></i>Ke: <?= esc($t['tujuan_orang'] ?? '-') ?></div>
+                                <div class="mt-1 d-flex gap-1 flex-wrap">
+                                    <span class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-10" style="font-size:0.55rem;" title="Jenis Kelamin"><?= $t['jenis_kelamin'] ?? '-' ?></span>
+                                    <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-10" style="font-size:0.55rem;" title="Usia"><?= $t['usia'] ?? '-' ?> Thn</span>
+                                    <?php if(($t['disabilitas'] ?? '') == 'Disabilitas'): ?>
+                                        <span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-10" style="font-size:0.55rem;">Disabilitas</span>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                        </div>
                     </td>
                     <td>
-                        <div class="small fw-800 mb-1"><?= esc($t['keperluan']) ?></div>
-                        <div class="extra-small text-muted d-flex align-items-center gap-2">
-                            <span><i class="bi bi-calendar-event me-1"></i><?= date('d/m/Y', strtotime($t['created_at'])) ?></span>
-                            <span><i class="bi bi-clock me-1"></i><?= date('H:i', strtotime($t['created_at'])) ?> WIB</span>
+                        <?php if(str_starts_with($t['keperluan'], 'Lainnya: ')): ?>
+                            <div class="small fw-800 text-dark mb-1">Lainnya</div>
+                            <div class="extra-small text-primary fw-bold mb-1 italic"><?= esc(substr($t['keperluan'], 9)) ?></div>
+                        <?php else: ?>
+                            <div class="small fw-800 text-dark mb-1"><?= esc($t['keperluan']) ?></div>
+                        <?php endif; ?>
+                        <div class="extra-small text-muted text-truncate mb-2" style="max-width:180px;" title="<?= esc($t['keterangan']) ?>"><?= esc($t['keterangan'] ?? '-') ?></div>
+                        <div class="extra-small d-flex gap-2">
+                            <span class="text-secondary"><i class="bi bi-calendar-event me-1"></i><?= format_indo($t['created_at']) ?></span>
+                            <span class="text-secondary"><i class="bi bi-clock me-1"></i><?= date('H:i', strtotime($t['created_at'])) ?></span>
                         </div>
                     </td>
                     <td class="pe-4 text-end">
@@ -197,13 +266,44 @@
         </table>
     </div>
     <div class="p-4 border-top bg-light bg-opacity-25 d-flex justify-content-end">
-        <?= $pager->links('default', 'modern') ?>
+        <?= $pager->links('default', 'boxed') ?>
     </div>
 </div>
+
+<script>
+    function showFoto(url) {
+        Swal.fire({
+            imageUrl: url,
+            imageAlt: 'Selfie Tamu',
+            showConfirmButton: false,
+            customClass: {
+                image: 'rounded-5 border-white border-5 shadow-2xl'
+            }
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        new TomSelect("#filter_pegawai", {
+            create: false,
+            sortField: {
+                field: "text",
+                direction: "asc"
+            }
+        });
+    });
+
+</script>
 
 <style>
     .transition-hover { transition: 0.3s; }
     .transition-hover:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.1) !important; }
+
+    /* Tom Select Styling */
+    .ts-control { border: none !important; padding: 12px 20px !important; border-radius: 12px !important; background-color: #f8fafc !important; font-weight: 600 !important; color: #334155 !important; min-height: 45px !important; border: 1px solid #e2e8f0 !important; }
+    .ts-wrapper.single .ts-control { background-image: none !important; }
+    .ts-wrapper.single .ts-control::after { content: "\F229"; font-family: "bootstrap-icons"; position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: #6366f1; font-weight: bold; }
+    .ts-dropdown { border-radius: 12px !important; border: 1px solid #e2e8f0 !important; box-shadow: 0 10px 25px rgba(0,0,0,0.1) !important; padding: 5px !important; }
 </style>
+
 
 <?= $this->include('admin/layout/footer') ?>

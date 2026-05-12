@@ -109,6 +109,16 @@ class Filters extends BaseFilters
      * @var array<string, array<string, list<string>>>
      */
     public array $filters = [
-        'auth' => ['before' => ['admin/dashboard*', 'admin/data-tamu*', 'admin/pegawai*', 'admin/laporan*', 'admin/logout']],
+        'auth' => ['before' => [
+            'admin/dashboard*', 
+            'admin/data-tamu*', 
+            'admin/pegawai*', 
+            'admin/laporan*', 
+            'admin/logout', 
+            'admin/export*', 
+            'admin/profile*', 
+            'admin/settings*', 
+            'admin/analitik*'
+        ]],
     ];
 }

@@ -114,7 +114,12 @@ function format_indo($date) {
                     
                     <!-- Column 3: Keperluan -->
                     <td>
-                        <div class="small fw-800 text-dark mb-1"><?= esc($t['keperluan']) ?></div>
+                        <?php if(str_starts_with($t['keperluan'], 'Lainnya: ')): ?>
+                            <div class="small fw-800 text-dark mb-1">Lainnya</div>
+                            <div class="extra-small text-primary fw-bold mb-1 italic"><?= esc(substr($t['keperluan'], 9)) ?></div>
+                        <?php else: ?>
+                            <div class="small fw-800 text-dark mb-1"><?= esc($t['keperluan']) ?></div>
+                        <?php endif; ?>
                         <div class="extra-small text-muted text-truncate mb-2" style="max-width:180px;" title="<?= esc($t['keterangan']) ?>"><?= esc($t['keterangan'] ?? '-') ?></div>
                         <div class="extra-small d-flex gap-2">
                             <span class="text-secondary"><i class="bi bi-calendar-event me-1"></i><?= format_indo($t['created_at']) ?></span>
@@ -155,10 +160,14 @@ function format_indo($date) {
             </tbody>
         </table>
     </div>
-    <div class="p-4 border-top bg-light bg-opacity-25 d-flex justify-content-end"><?= $pager->links('default', 'modern') ?></div>
+    <div class="p-4 border-top bg-light bg-opacity-25 d-flex justify-content-end"><?= $pager->links('default', 'boxed') ?></div>
 </div>
 
 <!-- Modal Edit (Refined Aesthetic) -->
+<!-- Tambahkan Tom Select untuk fitur searching di dropdown -->
+<link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.bootstrap5.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
+
 <div class="modal fade" id="modalTamu" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 rounded-5 shadow-2xl overflow-hidden">
@@ -175,26 +184,34 @@ function format_indo($date) {
                     <div class="col-6"><label class="form-label small fw-800 text-muted">NIK / KTP</label><input type="text" name="no_identitas" id="no_identitas" class="form-control rounded-3" minlength="16" maxlength="16" pattern="\d{16}" title="NIK harus berjumlah 16 digit angka" required <?= $isPetugas ? 'readonly style="opacity:0.6; cursor:not-allowed;"' : '' ?>></div>
                     <div class="col-6"><label class="form-label small fw-800 text-muted">Nomor HP / WhatsApp</label><input type="tel" name="no_telp" id="no_telp" class="form-control rounded-3" required <?= $isPetugas ? 'readonly style="opacity:0.6; cursor:not-allowed;"' : '' ?>></div>
                     <div class="col-12"><label class="form-label small fw-800 text-muted">Instansi</label><input type="text" name="instansi" id="instansi" class="form-control rounded-3" <?= $isPetugas ? 'readonly style="opacity:0.6; cursor:not-allowed;"' : '' ?>></div>
-                    <div class="col-12"><label class="form-label small fw-800 text-muted">Orang yang Dituju</label><input type="text" name="tujuan_orang" id="tujuan_orang" class="form-control rounded-3" <?= $isPetugas ? 'readonly style="opacity:0.6; cursor:not-allowed;"' : '' ?>></div>
-                    <div class="col-12"><label class="form-label small fw-800 text-muted">Keperluan</label><input type="text" name="keperluan" id="keperluan" class="form-control rounded-3" required <?= $isPetugas ? 'readonly style="opacity:0.6; cursor:not-allowed;"' : '' ?>></div>
+                    <div class="col-12">
+                        <label class="form-label small fw-800 text-muted">Orang yang Dituju</label>
+                        <select name="tujuan_orang" id="tujuan_orang_select" class="rounded-3">
+                            <option value="">Pilih Karyawan...</option>
+                            <?php foreach($pegawaiList as $p): ?>
+                                <option value="<?= esc($p['nama']) ?>"><?= esc($p['nama']) ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="col-12"><label class="form-label small fw-800 text-muted">Keperluan</label><input type="text" name="keperluan" id="keperluan" class="form-control rounded-3" required></div>
                     <div class="col-12"><label class="form-label small fw-800 text-muted">Alasan Keperluan</label><textarea name="keterangan" id="keterangan_edit" class="form-control rounded-3" rows="3"></textarea></div>
                     <div class="col-4">
                         <label class="form-label small fw-800 text-muted">L/P</label>
-                        <select name="jenis_kelamin" id="jenis_kelamin_edit" class="form-select rounded-3">
+                        <select name="jenis_kelamin" id="jenis_kelamin_edit" class="form-select rounded-3" <?= $isPetugas ? 'style="pointer-events: none; opacity:0.6; background-color: #e9ecef;" tabindex="-1"' : '' ?>>
                             <option value="L">Laki-laki</option>
                             <option value="P">Perempuan</option>
                         </select>
                     </div>
                     <div class="col-4">
                         <label class="form-label small fw-800 text-muted">Disabilitas</label>
-                        <select name="disabilitas" id="disabilitas_edit" class="form-select rounded-3">
+                        <select name="disabilitas" id="disabilitas_edit" class="form-select rounded-3" <?= $isPetugas ? 'style="pointer-events: none; opacity:0.6; background-color: #e9ecef;" tabindex="-1"' : '' ?>>
                             <option value="Non Disabilitas">Non</option>
                             <option value="Disabilitas">Disabilitas</option>
                         </select>
                     </div>
                     <div class="col-4">
                         <label class="form-label small fw-800 text-muted">Usia</label>
-                        <select name="usia" id="usia_edit" class="form-select rounded-3">
+                        <select name="usia" id="usia_edit" class="form-select rounded-3" <?= $isPetugas ? 'style="pointer-events: none; opacity:0.6; background-color: #e9ecef;" tabindex="-1"' : '' ?>>
                             <option value="15-20">15-20</option>
                             <option value="21-30">21-30</option>
                             <option value="31-40">31-40</option>
@@ -211,14 +228,33 @@ function format_indo($date) {
 
 <script>
     let tamuModal;
-    document.addEventListener('DOMContentLoaded', () => { tamuModal = new bootstrap.Modal(document.getElementById('modalTamu')); });
+    let tsTujuan;
+
+    document.addEventListener('DOMContentLoaded', () => { 
+        tamuModal = new bootstrap.Modal(document.getElementById('modalTamu')); 
+        
+        // Inisialisasi Tom Select
+        tsTujuan = new TomSelect("#tujuan_orang_select", {
+            create: true, // Izinkan input manual jika karyawan tidak ada di list
+            sortField: {
+                field: "text",
+                direction: "asc"
+            }
+        });
+    });
+
     function editTamu(data) { 
         document.getElementById('tamuId').value = data.id; 
         document.getElementById('nama').value = data.nama; 
         document.getElementById('no_identitas').value = data.no_identitas; 
         document.getElementById('no_telp').value = data.no_telp || ''; 
         document.getElementById('instansi').value = data.instansi; 
-        document.getElementById('tujuan_orang').value = data.tujuan_orang || ''; 
+        
+        // Set nilai Tom Select
+        if (tsTujuan) {
+            tsTujuan.setValue(data.tujuan_orang || '');
+        }
+        
         document.getElementById('keperluan').value = data.keperluan; 
         document.getElementById('keterangan_edit').value = data.keterangan || ''; 
         document.getElementById('jenis_kelamin_edit').value = data.jenis_kelamin || 'L'; 

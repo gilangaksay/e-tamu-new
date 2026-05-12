@@ -18,7 +18,9 @@ class TamuModel extends Model {
     }
 
     public function filterTamu($filters = []) {
-        $builder = $this->select('tamu.*');
+        $builder = $this->select('tamu.*, pegawai.nama as nama_pegawai')
+                        ->join('pegawai', 'pegawai.id = tamu.pegawai_id', 'left');
+
         if (!empty($filters['tgl_mulai'])) $builder->where('DATE(tamu.created_at) >=', $filters['tgl_mulai']);
         if (!empty($filters['tgl_akhir'])) $builder->where('DATE(tamu.created_at) <=', $filters['tgl_akhir']);
         if (!empty($filters['status'])) $builder->where('tamu.status', $filters['status']);
@@ -27,15 +29,20 @@ class TamuModel extends Model {
         if (!empty($filters['jenis_kelamin'])) $builder->where('tamu.jenis_kelamin', $filters['jenis_kelamin']);
         if (!empty($filters['disabilitas'])) $builder->where('tamu.disabilitas', $filters['disabilitas']);
         if (!empty($filters['usia'])) $builder->where('tamu.usia', $filters['usia']);
+        if (!empty($filters['pegawai_id'])) $builder->where('tamu.pegawai_id', $filters['pegawai_id']);
         
         if (!empty($filters['search'])) {
+            $search = trim($filters['search']);
             $builder->groupStart()
-                    ->like('tamu.nama', $filters['search'])
-                    ->orLike('tamu.no_identitas', $filters['search'])
+                    ->like('tamu.nama', $search)
+                    ->orLike('tamu.no_identitas', $search)
+                    ->orLike('tamu.tujuan_orang', $search)
+                    ->orLike('pegawai.nama', $search)
                     ->groupEnd();
         }
         return $builder->orderBy('tamu.created_at', 'DESC');
     }
+
 
     public function getChartStats($range = 'mingguan') {
         $labels = []; $data = [];

@@ -1,5 +1,9 @@
 <?= $this->include('admin/layout/header') ?>
 
+<!-- Tom Select Assets -->
+<link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.bootstrap5.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
+
 <!-- Custom Header with Gradient -->
 <div class="row mb-5">
     <div class="col-12">
@@ -66,11 +70,13 @@
                     <form action="<?= site_url('admin/export/print') ?>" method="GET" target="_blank">
                         <!-- Pencarian -->
                         <div class="mb-4">
-                            <label class="form-label small fw-800 text-muted">Cari Nama atau NIK (Opsional)</label>
-                            <div class="input-group">
-                                <span class="input-group-text bg-light border-0 rounded-start-4 ps-3"><i class="bi bi-search text-primary"></i></span>
-                                <input type="text" name="search" class="form-control py-3 bg-light border-0 rounded-end-4" placeholder="Ketik nama atau nomor identitas..." value="<?= $search ?? '' ?>" style="height: 55px;">
-                            </div>
+                            <label class="form-label small fw-800 text-muted">Cari Nama Karyawan (yang dituju)</label>
+                            <select name="search" id="search_pegawai" class="rounded-4">
+                                <option value="">Semua Karyawan (Tanpa Filter Nama)</option>
+                                <?php foreach($pegawaiList as $p): ?>
+                                    <option value="<?= esc($p['nama']) ?>" <?= ($search ?? '') == $p['nama'] ? 'selected' : '' ?>><?= esc($p['nama']) ?></option>
+                                <?php endforeach; ?>
+                            </select>
                         </div>
 
                         <!-- Tanggal -->
@@ -161,9 +167,23 @@
                             </p>
                         </div>
 
-                        <button type="submit" class="btn-modern w-100 py-3 shadow-lg fs-5 fw-800 transition-hover">
-                            <i class="bi bi-printer-fill me-2"></i> Buka Antarmuka Cetak
-                        </button>
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <button type="submit" name="format" value="print" class="btn-modern w-100 py-3 shadow fs-6 fw-800 transition-hover">
+                                    <i class="bi bi-printer-fill me-2"></i> Print View
+                                </button>
+                            </div>
+                            <div class="col-md-4">
+                                <button type="submit" name="format" value="pdf" class="btn btn-danger w-100 py-3 shadow fs-6 fw-800 transition-hover rounded-4 border-0" style="background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);">
+                                    <i class="bi bi-file-earmark-pdf-fill me-2"></i> Export PDF
+                                </button>
+                            </div>
+                            <div class="col-md-4">
+                                <button type="submit" name="format" value="excel" class="btn btn-success w-100 py-3 shadow fs-6 fw-800 transition-hover rounded-4 border-0" style="background: linear-gradient(135deg, #10b981 0%, #047857 100%);">
+                                    <i class="bi bi-file-earmark-excel-fill me-2"></i> Export Excel
+                                </button>
+                            </div>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -175,9 +195,24 @@
     .transition-hover { transition: 0.3s; }
     .transition-hover:hover { transform: scale(1.02); }
     .input-group-text { font-size: 1.1rem; }
+    /* Tom Select Styling */
+    .ts-control { border: none !important; padding: 15px 20px !important; border-radius: 16px !important; background-color: #f8fafc !important; font-weight: 600 !important; color: #334155 !important; min-height: 55px !important; }
+    .ts-wrapper.single .ts-control { background-image: none !important; }
+    .ts-wrapper.single .ts-control::after { content: "\F229"; font-family: "bootstrap-icons"; position: absolute; right: 20px; top: 50%; transform: translateY(-50%); color: #6366f1; font-weight: bold; }
 </style>
 
 <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Inisialisasi Tom Select untuk Nama Karyawan
+        new TomSelect("#search_pegawai", {
+            create: true,
+            sortField: {
+                field: "text",
+                direction: "asc"
+            }
+        });
+    });
+
     document.getElementById('tahunFilter').addEventListener('change', function() {
         const year = this.value;
         if (year) {

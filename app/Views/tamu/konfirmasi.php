@@ -35,10 +35,7 @@
                     <div class="fw-bold text-dark mb-1"><?= esc($tamu['keperluan']) ?></div>
                     <div class="small text-muted italic">"<?= esc($tamu['keterangan']) ?>"</div>
                 </div>
-                <div class="mb-3">
-                    <small class="text-muted d-block uppercase tracking-wider" style="font-size:0.6rem; font-weight:700;">Orang yang Dituju</small>
-                    <div class="fw-bold text-dark"><?= esc($tamu['tujuan_orang'] ?? '-') ?></div>
-                </div>
+
                 <hr class="my-3 opacity-50">
                 <div class="row g-2">
                     <div class="col-4">
