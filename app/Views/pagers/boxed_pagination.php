@@ -67,6 +67,22 @@
             </li>
         <?php endif ?>
 
+        <!-- Manual Limit Input (Samping Previous) -->
+        <li class="page-item d-flex align-items-center bg-white px-3 border-end" style="border-right: 1px solid #dee2e6;">
+            <div class="d-flex align-items-center gap-2">
+                <span class="text-muted fw-bold" style="font-size: 0.65rem; white-space: nowrap;">Limit:</span>
+                <input type="number" 
+                       value="<?= $_GET['limit'] ?? 10 ?>" 
+                       min="1" 
+                       max="500"
+                       class="form-control form-control-sm text-center p-0" 
+                       style="width: 50px; height: 28px; font-size: 0.8rem; border: 1px solid #dee2e6; border-radius: 4px;"
+                       onkeypress="if(event.key === 'Enter') globalChangeLimit(this.value)"
+                       onblur="globalChangeLimit(this.value)"
+                       title="Ketik jumlah data lalu tekan Enter">
+            </div>
+        </li>
+
         <?php foreach ($pager->links() as $link) : ?>
             <li class="page-item <?= $link['active'] ? 'active' : '' ?>">
                 <a class="page-link" href="<?= $link['uri'] ?>">
@@ -96,3 +112,18 @@
         <?php endif ?>
     </ul>
 </nav>
+
+<script>
+    if (typeof globalChangeLimit !== 'function') {
+        function globalChangeLimit(limit) {
+            if (!limit || limit < 1) return;
+            const url = new URL(window.location.href);
+            // Hanya reload jika limit berubah
+            if (url.searchParams.get('limit') != limit) {
+                url.searchParams.set('limit', limit);
+                url.searchParams.set('page', 1);
+                window.location.href = url.toString();
+            }
+        }
+    }
+</script>

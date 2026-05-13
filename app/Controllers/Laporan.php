@@ -18,7 +18,8 @@ class Laporan extends BaseController {
         $filters['disabilitas'] = $filters['disabilitas'] ?? '';
         $filters['usia'] = $filters['usia'] ?? '';
 
-        $laporanTamu = $model->filterTamu($filters)->paginate(10);
+        $limit = $this->request->getGet('limit') ?? 10;
+        $laporanTamu = $model->filterTamu($filters)->paginate($limit);
 
         // Statistics
         $stats = [
@@ -35,7 +36,7 @@ class Laporan extends BaseController {
             'pager' => $model->pager,
             'stats' => $stats,
             'pegawaiList' => (new PegawaiModel())->getAktif()
-        ], $filters));
+        ], $filters, ['limit' => $limit]));
 
     }
 }

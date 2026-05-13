@@ -27,6 +27,7 @@ function format_indo($date) {
             </div>
             <div class="d-flex gap-2 align-items-center">
                 <form action="" method="GET" class="d-flex gap-2">
+                    <input type="hidden" name="limit" value="<?= $filters['limit'] ?? 10 ?>">
                     <div class="input-group input-group-sm" style="width: 250px;">
                         <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
                         <input type="text" name="search" class="form-control border-start-0" placeholder="Cari Nama/NIK..." value="<?= $filters['search'] ?? '' ?>">
@@ -42,6 +43,7 @@ function format_indo($date) {
 <div class="mb-4" id="filterBox">
     <div class="modern-card p-4 bg-white border-0 shadow-lg">
         <form action="" method="GET" class="row g-3 align-items-end">
+            <input type="hidden" name="limit" value="<?= $filters['limit'] ?? 10 ?>">
             <div class="col-md-3"><label class="form-label small fw-800 text-muted">Mulai Tanggal</label><input type="date" name="tgl_mulai" class="form-control rounded-3" value="<?= $filters['tgl_mulai'] ?? '' ?>"></div>
             <div class="col-md-3"><label class="form-label small fw-800 text-muted">Sampai Tanggal</label><input type="date" name="tgl_akhir" class="form-control rounded-3" value="<?= $filters['tgl_akhir'] ?? '' ?>"></div>
             <div class="col-md-3">
@@ -54,7 +56,7 @@ function format_indo($date) {
                     <option value="dibatalkan" <?= ($filters['status'] ?? '') == 'dibatalkan' ? 'selected' : '' ?>>Dibatalkan</option>
                 </select>
             </div>
-            <div class="col-md-3"><button type="submit" class="btn-modern w-100 py-2 shadow-sm">Terapkan Perubahan</button></div>
+            <div class="col-md-3 text-end mt-3"><button type="submit" class="btn-modern px-5 py-2 shadow-sm">Terapkan Perubahan</button></div>
         </form>
     </div>
 </div>
@@ -65,7 +67,8 @@ function format_indo($date) {
         <table class="table table-hover align-middle mb-0">
             <thead>
                 <tr class="bg-light bg-opacity-50">
-                    <th class="ps-4 py-3 border-0 text-muted extra-small text-uppercase fw-800">Antrian</th>
+                    <th class="ps-4 py-3 border-0 text-muted extra-small text-uppercase fw-800">No</th>
+                    <th class="py-3 border-0 text-muted extra-small text-uppercase fw-800">Antrian</th>
                     <th class="py-3 border-0 text-muted extra-small text-uppercase fw-800">Profil & Foto</th>
                     <th class="py-3 border-0 text-muted extra-small text-uppercase fw-800">Kunjungan</th>
                     <th class="py-3 border-0 text-muted extra-small text-uppercase fw-800">Kendali Status</th>
@@ -73,11 +76,18 @@ function format_indo($date) {
                 </tr>
             </thead>
             <tbody>
-                <?php foreach($tamuList as $t): ?>
+                <?php 
+                    $currentLimit = $filters['limit'] ?? 10;
+                    $no = 1 + ($pager->getCurrentPage() - 1) * $currentLimit;
+                    foreach($tamuList as $t): 
+                ?>
                 <tr id="row-<?= $t['id'] ?>" class="border-bottom border-light">
+                    <!-- Column 0: No -->
+                    <td class="ps-4 text-muted fw-bold small"><?= $no++ ?></td>
+                    
                     <!-- Column 1: Antrian -->
-                    <td class="ps-4">
-                        <div class="d-inline-flex align-items-center justify-content-center bg-primary bg-opacity-10 text-primary fw-800 rounded-4" style="width:50px; height:50px; font-size:1rem;">
+                    <td>
+                        <div class="d-inline-flex align-items-center justify-content-center bg-primary bg-opacity-10 text-primary fw-800 rounded-4" style="width:45px; height:45px; font-size:0.9rem;">
                             <?= $t['no_antrian'] ?>
                         </div>
                     </td>
@@ -100,7 +110,7 @@ function format_indo($date) {
                                 <div class="extra-small text-muted"><i class="bi bi-card-text me-1"></i><?= esc($t['no_identitas']) ?></div>
                                 <div class="extra-small text-muted"><i class="bi bi-whatsapp me-1"></i><?= esc($t['no_telp'] ?? '-') ?></div>
                                 <div class="badge bg-light text-primary mt-1 border border-primary border-opacity-10" style="font-size:0.6rem;"><?= esc($t['instansi'] ?? 'Pribadi') ?></div>
-                                <div class="badge bg-light text-success mt-1 border border-success border-opacity-10" style="font-size:0.6rem;"><i class="bi bi-person-fill me-1"></i>Ke: <?= esc($t['tujuan_orang'] ?? '-') ?></div>
+                                <div class="badge bg-light text-success mt-1 border border-success border-opacity-10" style="font-size:0.6rem;"><i class="bi bi-person-fill me-1"></i>Ke: <?= esc($t['nama_pegawai'] ?? $t['tujuan_orang'] ?? '-') ?></div>
                                 <div class="mt-1 d-flex gap-1 flex-wrap">
                                     <span class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-10" style="font-size:0.55rem;" title="Jenis Kelamin"><?= $t['jenis_kelamin'] ?? '-' ?></span>
                                     <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-10" style="font-size:0.55rem;" title="Usia"><?= $t['usia'] ?? '-' ?> Thn</span>
@@ -186,14 +196,24 @@ function format_indo($date) {
                     <div class="col-12"><label class="form-label small fw-800 text-muted">Instansi</label><input type="text" name="instansi" id="instansi" class="form-control rounded-3" <?= $isPetugas ? 'readonly style="opacity:0.6; cursor:not-allowed;"' : '' ?>></div>
                     <div class="col-12">
                         <label class="form-label small fw-800 text-muted">Orang yang Dituju</label>
-                        <select name="tujuan_orang" id="tujuan_orang_select" class="rounded-3">
+                        <select name="pegawai_id" id="tujuan_orang_select" class="rounded-3">
                             <option value="">Pilih Karyawan...</option>
                             <?php foreach($pegawaiList as $p): ?>
-                                <option value="<?= esc($p['nama']) ?>"><?= esc($p['nama']) ?></option>
+                                <option value="<?= $p['id'] ?>" data-nama="<?= esc($p['nama']) ?>"><?= esc($p['nama']) ?></option>
                             <?php endforeach; ?>
                         </select>
+                        <input type="hidden" name="tujuan_orang" id="tujuan_orang_hidden">
                     </div>
-                    <div class="col-12"><label class="form-label small fw-800 text-muted">Keperluan</label><input type="text" name="keperluan" id="keperluan" class="form-control rounded-3" required></div>
+                    <div class="col-12">
+                        <label class="form-label small fw-800 text-muted">Keperluan</label>
+                        <select name="keperluan" id="keperluan" class="form-select rounded-3" required>
+                            <option value="Layanan AHU">Layanan AHU</option>
+                            <option value="Layanan KI">Layanan KI</option>
+                            <option value="Layanan Peraturan Perundangan-undangan">Layanan Peraturan Perundangan-undangan</option>
+                            <option value="Layanan Umum">Layanan Umum</option>
+                            <option value="Lainnya">Lainnya</option>
+                        </select>
+                    </div>
                     <div class="col-12"><label class="form-label small fw-800 text-muted">Alasan Keperluan</label><textarea name="keterangan" id="keterangan_edit" class="form-control rounded-3" rows="3"></textarea></div>
                     <div class="col-4">
                         <label class="form-label small fw-800 text-muted">L/P</label>
@@ -239,6 +259,22 @@ function format_indo($date) {
             sortField: {
                 field: "text",
                 direction: "asc"
+            },
+            onChange: function(value) {
+                const hidden = document.getElementById('tujuan_orang_hidden');
+                if (!value) {
+                    hidden.value = '';
+                    return;
+                }
+                
+                const option = this.options[value];
+                if (option && option.nama) {
+                    // Jika dari dropdown (ada data-nama)
+                    hidden.value = option.nama;
+                } else {
+                    // Jika input manual atau value adalah text
+                    hidden.value = value;
+                }
             }
         });
     });
@@ -252,10 +288,33 @@ function format_indo($date) {
         
         // Set nilai Tom Select
         if (tsTujuan) {
-            tsTujuan.setValue(data.tujuan_orang || '');
+            if (data.pegawai_id && data.pegawai_id != 0) {
+                tsTujuan.setValue(data.pegawai_id);
+            } else {
+                tsTujuan.setValue(data.tujuan_orang || '');
+            }
+        }
+        document.getElementById('tujuan_orang_hidden').value = data.tujuan_orang || '';
+        
+        // Handle Keperluan Dropdown
+        const keperluanSelect = document.getElementById('keperluan');
+        // Check if value exists in options, if not set to 'Lainnya' (for compatibility with old 'Lainnya: detail' data)
+        let valExists = false;
+        for(let i=0; i < keperluanSelect.options.length; i++) {
+            if(keperluanSelect.options[i].value == data.keperluan) {
+                valExists = true;
+                break;
+            }
         }
         
-        document.getElementById('keperluan').value = data.keperluan; 
+        if (valExists) {
+            keperluanSelect.value = data.keperluan;
+        } else if (data.keperluan && data.keperluan.startsWith('Lainnya')) {
+            keperluanSelect.value = 'Lainnya';
+        } else {
+            keperluanSelect.value = 'Lainnya'; // Fallback
+        }
+        
         document.getElementById('keterangan_edit').value = data.keterangan || ''; 
         document.getElementById('jenis_kelamin_edit').value = data.jenis_kelamin || 'L'; 
         document.getElementById('disabilitas_edit').value = data.disabilitas || 'Non Disabilitas'; 

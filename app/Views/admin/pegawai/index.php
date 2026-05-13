@@ -1,24 +1,52 @@
 <?= $this->include('admin/layout/header') ?>
 
-<div class="container-fluid">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h4 class="fw-800 text-dark mb-1">Data Karyawan</h4>
-            <p class="text-muted small mb-0">Kelola informasi karyawan yang bertugas di instansi</p>
+<div class="row mb-5 mt-2">
+    <div class="col-12">
+        <div class="modern-card p-4 bg-white border-0 shadow-sm border-start border-primary border-5 d-flex justify-content-between align-items-center">
+            <div>
+                <h4 class="fw-800 mb-1 text-dark">Manajemen Karyawan</h4>
+                <p class="text-muted small m-0">Kelola data karyawan dan status keaktifan mereka dalam sistem.</p>
+            </div>
+            <button class="btn btn-primary rounded-pill px-4 d-flex align-items-center gap-2 shadow-sm fw-800" onclick="addPegawai()">
+                <i class="bi bi-plus-lg"></i>
+                <span>Tambah Karyawan</span>
+            </button>
         </div>
-        <button class="btn btn-primary rounded-3 px-4 d-flex align-items-center gap-2 shadow-sm" onclick="addPegawai()">
-            <i class="bi bi-plus-lg"></i>
-            <span>Tambah Karyawan</span>
-        </button>
     </div>
+</div>
 
-    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+    <div class="modern-card bg-white border-0 shadow-sm overflow-hidden mb-5">
+        <div class="p-4 bg-light bg-opacity-50 border-bottom">
+            <form action="" method="GET" class="row g-3">
+                <input type="hidden" name="limit" value="<?= $limit ?? 10 ?>">
+                <div class="col-md-5">
+                    <label class="form-label extra-small fw-bold text-dark">Cari Nama/Jabatan/Unit</label>
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
+                        <input type="text" name="search" class="form-control border-start-0 ps-0" placeholder="Cari..." value="<?= $search ?? '' ?>">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label extra-small fw-bold text-dark">Filter Status</label>
+                    <select name="status" class="form-select form-select-sm rounded-3">
+                        <option value="">Semua Status</option>
+                        <option value="1" <?= ($status ?? '') == '1' ? 'selected' : '' ?>>Aktif</option>
+                        <option value="0" <?= ($status ?? '') == '0' ? 'selected' : '' ?>>Non-Aktif</option>
+                    </select>
+                </div>
+                <div class="col-md-4 d-flex align-items-end gap-1">
+                    <button type="submit" class="btn btn-primary btn-sm w-100 py-2 fw-800">Terapkan Filter</button>
+                    <a href="<?= site_url('admin/pegawai') ?>" class="btn btn-light btn-sm py-2 px-3 fw-800 border" title="Reset"><i class="bi bi-arrow-counterclockwise"></i></a>
+                </div>
+            </form>
+        </div>
         <div class="card-body p-0">
             <div class="table-responsive">
                 <table class="table table-hover align-middle mb-0">
                     <thead class="bg-light">
                         <tr>
-                            <th class="ps-4 py-3 text-uppercase small fw-800 text-muted" style="font-size: 0.65rem;">Nama Karyawan</th>
+                            <th class="ps-4 py-3 text-uppercase small fw-800 text-muted" style="font-size: 0.65rem; width: 50px;">No</th>
+                            <th class="py-3 text-uppercase small fw-800 text-muted" style="font-size: 0.65rem;">Nama Karyawan</th>
                             <th class="py-3 text-uppercase small fw-800 text-muted" style="font-size: 0.65rem;">Jabatan</th>
                             <th class="py-3 text-uppercase small fw-800 text-muted" style="font-size: 0.65rem;">Unit Kerja</th>
                             <th class="py-3 text-uppercase small fw-800 text-muted" style="font-size: 0.65rem;">Status</th>
@@ -28,7 +56,7 @@
                     <tbody>
                         <?php if(empty($pegawaiList)): ?>
                         <tr>
-                            <td colspan="5" class="text-center py-5">
+                            <td colspan="6" class="text-center py-5">
                                 <div class="text-muted">
                                     <i class="bi bi-person-x fs-1 opacity-25"></i>
                                     <p class="mt-2">Belum ada data karyawan</p>
@@ -36,9 +64,13 @@
                             </td>
                         </tr>
                         <?php endif; ?>
-                        <?php foreach($pegawaiList as $p): ?>
+                        <?php 
+                            $no = 1 + ($pager->getCurrentPage() - 1) * ($limit ?? 10);
+                            foreach($pegawaiList as $p): 
+                        ?>
                         <tr>
-                            <td class="ps-4">
+                            <td class="ps-4 text-muted fw-bold small"><?= $no++ ?></td>
+                            <td>
                                 <div class="d-flex align-items-center gap-3">
                                     <div class="rounded-circle bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center fw-bold" style="width: 38px; height: 38px;">
                                         <?= strtoupper(substr($p['nama'], 0, 1)) ?>
@@ -71,11 +103,9 @@
                 </table>
             </div>
         </div>
-        <?php if($pager->getPageCount() > 1): ?>
-        <div class="card-footer bg-white border-0 py-3 d-flex justify-content-end">
+        <div class="card-footer bg-white border-0 py-3 d-flex justify-content-end border-top">
             <?= $pager->links('default', 'boxed') ?>
         </div>
-        <?php endif; ?>
     </div>
 </div>
 

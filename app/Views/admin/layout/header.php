@@ -45,9 +45,11 @@
             <a href="<?= site_url('admin/data-tamu') ?>" class="nav-link-modern <?= str_contains(uri_string(), 'data-tamu') ? 'active' : '' ?>">
                 <i class="bi bi-people"></i> Managemen Tamu
             </a>
+            <?php if(session()->get('admin_role') == 'admin'): ?>
             <a href="<?= site_url('admin/pegawai') ?>" class="nav-link-modern <?= str_contains(uri_string(), 'pegawai') ? 'active' : '' ?>">
                 <i class="bi bi-person-badge"></i> Data Karyawan
             </a>
+            <?php endif; ?>
             <a href="<?= site_url('admin/laporan') ?>" class="nav-link-modern <?= str_contains(uri_string(), 'laporan') ? 'active' : '' ?>">
                 <i class="bi bi-bar-chart"></i> Laporan Aktivitas
             </a>

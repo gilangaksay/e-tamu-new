@@ -61,8 +61,15 @@
                 </div>
                 <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded-4">
                     <div class="d-flex align-items-center gap-3">
+                        <div class="p-2 bg-info rounded-3"><div class="rounded-circle bg-white" style="width:8px; height:8px;"></div></div>
+                        <span class="small fw-bold text-muted uppercase">Berkunjung</span>
+                    </div>
+                    <span class="fw-800 h5 mb-0 text-info"><?= $statusCounts['visiting'] ?></span>
+                </div>
+                <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded-4">
+                    <div class="d-flex align-items-center gap-3">
                         <div class="p-2 bg-success rounded-3"><div class="rounded-circle bg-white" style="width:8px; height:8px;"></div></div>
-                        <span class="small fw-bold text-muted uppercase">Diterima</span>
+                        <span class="small fw-bold text-muted uppercase">Selesai</span>
                     </div>
                     <span class="fw-800 h5 mb-0 text-success"><?= $statusCounts['done'] ?></span>
                 </div>
@@ -90,6 +97,7 @@
                         <tr style="font-size: 0.7rem;" class="text-uppercase text-muted fw-800 tracking-wider">
                             <th class="ps-4 border-0">Profil Pengunjung</th>
                             <th class="border-0">Keperluan</th>
+                            <th class="border-0 text-center">Status</th>
                             <th class="border-0">Waktu</th>
                             <th class="pe-4 border-0 text-end">Tindakan</th>
                         </tr>
@@ -111,6 +119,19 @@
                             <td>
                                 <div class="small fw-800 text-dark"><?= esc($t['keperluan']) ?></div>
                                 <div class="extra-small text-muted text-truncate" style="max-width:200px;"><?= esc($t['keterangan'] ?? '-') ?></div>
+                            </td>
+                            <td>
+                                <?php 
+                                    $stClass = 'bg-warning';
+                                    if($t['status'] == 'berkunjung') $stClass = 'bg-info';
+                                    if($t['status'] == 'selesai') $stClass = 'bg-success';
+                                    if($t['status'] == 'dibatalkan') $stClass = 'bg-danger';
+                                ?>
+                                <div class="text-center">
+                                    <span class="badge <?= $stClass ?> bg-opacity-10 <?= str_replace('bg', 'text', $stClass) ?> rounded-pill px-3 fw-bold border-0 text-uppercase" style="font-size:0.6rem;">
+                                        <?= $t['status'] ?>
+                                    </span>
+                                </div>
                             </td>
                             <td>
                                 <div class="small fw-bold"><i class="bi bi-clock me-1 opacity-50"></i><?= date('H:i', strtotime($t['created_at'])) ?></div>
@@ -168,10 +189,10 @@
     new Chart(document.getElementById('chartStatus').getContext('2d'), {
         type: 'doughnut',
         data: {
-            labels: ['Menunggu', 'Selesai', 'Dibatalkan'],
+            labels: ['Menunggu', 'Berkunjung', 'Selesai', 'Dibatalkan'],
             datasets: [{
-                data: [<?= $statusCounts['waiting'] ?>, <?= $statusCounts['done'] ?>, <?= $statusCounts['cancelled'] ?>],
-                backgroundColor: ['#f59e0b', '#10b981', '#ef4444'],
+                data: [<?= $statusCounts['waiting'] ?>, <?= $statusCounts['visiting'] ?>, <?= $statusCounts['done'] ?>, <?= $statusCounts['cancelled'] ?>],
+                backgroundColor: ['#f59e0b', '#0ea5e9', '#10b981', '#ef4444'],
                 borderWidth: 8,
                 borderColor: '#fff',
                 hoverOffset: 15

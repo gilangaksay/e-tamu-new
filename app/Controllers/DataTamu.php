@@ -6,12 +6,13 @@ class DataTamu extends BaseController {
     public function index() {
         $model = new TamuModel();
         $filters = $this->request->getGet();
+        $limit = $this->request->getGet('limit') ?? 10;
         return view('admin/tamu/index', [
             'title' => 'Data Tamu',
-            'tamuList' => $model->filterTamu($filters)->paginate(10),
+            'tamuList' => $model->filterTamu($filters)->paginate($limit),
             'pager' => $model->pager,
             'pegawaiList' => (new PegawaiModel())->getAktif(),
-            'filters' => $filters
+            'filters' => array_merge($filters, ['limit' => $limit])
         ]);
     }
     public function updateStatus() {
@@ -37,6 +38,11 @@ class DataTamu extends BaseController {
             unset($data['nama'], $data['no_identitas'], $data['no_telp'], $data['instansi'], $data['jenis_kelamin'], $data['disabilitas'], $data['usia']);
         }
         
+        // Pastikan pegawai_id bernilai null jika yang dimasukkan adalah teks manual (bukan ID)
+        if (isset($data['pegawai_id']) && !empty($data['pegawai_id']) && !is_numeric($data['pegawai_id'])) {
+            $data['pegawai_id'] = null;
+        }
+
         (new TamuModel())->update($data['id'], $data);
         return $this->response->setJSON(['success' => true, 'message' => 'Data tamu diperbarui.']);
     }

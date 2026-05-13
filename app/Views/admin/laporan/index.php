@@ -92,7 +92,8 @@ function format_indo($date) {
 
     <div id="filterLaporan">
         <div class="p-4 border-bottom bg-white">
-            <form class="row g-3">
+            <form class="row g-3" method="GET" action="">
+                <input type="hidden" name="limit" value="<?= $limit ?? 10 ?>">
                 <div class="col-md-3">
                     <label class="form-label extra-small fw-bold text-dark">Cari Nama/NIK Tamu</label>
                     <div class="input-group input-group-sm">
@@ -169,12 +170,12 @@ function format_indo($date) {
                             <div class="col-md">
                                 <label class="form-label extra-small fw-bold text-muted">Usia</label>
                                 <select name="usia" class="form-select form-select-sm">
-                                    <option value="">Semua</option>
-                                    <option value="15-20" <?= ($usia ?? '') == '15-20' ? 'selected' : '' ?>>15-20</option>
-                                    <option value="21-30" <?= ($usia ?? '') == '21-30' ? 'selected' : '' ?>>21-30</option>
-                                    <option value="31-40" <?= ($usia ?? '') == '31-40' ? 'selected' : '' ?>>31-40</option>
-                                    <option value="41-50" <?= ($usia ?? '') == '41-50' ? 'selected' : '' ?>>41-50</option>
-                                    <option value="50+" <?= ($usia ?? '') == '50+' ? 'selected' : '' ?>>50+</option>
+                                     <option value="">Semua</option>
+                                     <option value="15-20" <?= ($usia ?? '') == '15-20' ? 'selected' : '' ?>>15-20</option>
+                                     <option value="21-30" <?= ($usia ?? '') == '21-30' ? 'selected' : '' ?>>21-30</option>
+                                     <option value="31-40" <?= ($usia ?? '') == '31-40' ? 'selected' : '' ?>>31-40</option>
+                                     <option value="41-50" <?= ($usia ?? '') == '41-50' ? 'selected' : '' ?>>41-50</option>
+                                     <option value="50+" <?= ($usia ?? '') == '50+' ? 'selected' : '' ?>>50+</option>
                                 </select>
                             </div>
                         </div>
@@ -188,7 +189,8 @@ function format_indo($date) {
         <table class="table table-hover align-middle mb-0">
             <thead>
                 <tr class="bg-light">
-                    <th class="ps-4 py-3 border-0 text-muted extra-small text-uppercase fw-800">Antrian</th>
+                    <th class="ps-4 py-3 border-0 text-muted extra-small text-uppercase fw-800">No</th>
+                    <th class="py-3 border-0 text-muted extra-small text-uppercase fw-800">Antrian</th>
                     <th class="py-3 border-0 text-muted extra-small text-uppercase fw-800">Profil & Foto</th>
                     <th class="py-3 border-0 text-muted extra-small text-uppercase fw-800">Tujuan & Waktu</th>
                     <th class="pe-4 py-3 border-0 text-muted extra-small text-uppercase fw-800 text-end">Status Akhir</th>
@@ -196,12 +198,17 @@ function format_indo($date) {
             </thead>
             <tbody>
                 <?php if(empty($laporanTamu)): ?>
-                    <tr><td colspan="4" class="text-center py-5 text-muted">Belum ada data kunjungan yang tercatat untuk periode ini.</td></tr>
+                    <tr><td colspan="5" class="text-center py-5 text-muted">Belum ada data kunjungan yang tercatat untuk periode ini.</td></tr>
                 <?php endif; ?>
-                <?php foreach($laporanTamu as $t): ?>
+                <?php 
+                    $currentLimit = $limit ?? 10;
+                    $no = 1 + ($pager->getCurrentPage() - 1) * $currentLimit;
+                    foreach($laporanTamu as $t): 
+                ?>
                 <tr>
-                    <td class="ps-4">
-                        <div class="p-2 bg-light rounded-3 text-center" style="width:45px;">
+                    <td class="ps-4 text-muted fw-bold small"><?= $no++ ?></td>
+                    <td>
+                        <div class="p-2 bg-light rounded-3 text-center" style="width:40px;">
                             <span class="fw-800 text-primary small"><?= $t['no_antrian'] ?></span>
                         </div>
                     </td>
@@ -221,7 +228,7 @@ function format_indo($date) {
                                 <div class="extra-small text-muted"><i class="bi bi-card-text me-1"></i><?= esc($t['no_identitas']) ?></div>
                                 <div class="extra-small text-muted"><i class="bi bi-whatsapp me-1"></i><?= esc($t['no_telp'] ?? '-') ?></div>
                                 <div class="badge bg-light text-primary mt-1 border border-primary border-opacity-10" style="font-size:0.6rem;"><?= esc($t['instansi'] ?? 'Pribadi') ?></div>
-                                <div class="badge bg-light text-success mt-1 border border-success border-opacity-10" style="font-size:0.6rem;"><i class="bi bi-person-fill me-1"></i>Ke: <?= esc($t['tujuan_orang'] ?? '-') ?></div>
+                                <div class="badge bg-light text-success mt-1 border border-success border-opacity-10" style="font-size:0.6rem;"><i class="bi bi-person-fill me-1"></i>Ke: <?= esc($t['nama_pegawai'] ?? $t['tujuan_orang'] ?? '-') ?></div>
                                 <div class="mt-1 d-flex gap-1 flex-wrap">
                                     <span class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-10" style="font-size:0.55rem;" title="Jenis Kelamin"><?= $t['jenis_kelamin'] ?? '-' ?></span>
                                     <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-10" style="font-size:0.55rem;" title="Usia"><?= $t['usia'] ?? '-' ?> Thn</span>
