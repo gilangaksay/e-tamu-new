@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Laporan Kunjungan - <?= $s['nama_instansi'] ?></title>
     <style>
-        body { font-family: 'Helvetica', sans-serif; color: #000; padding: 20px; line-height: 1.2; font-size: 10px; }
+        body { font-family: 'Times New Roman', Times, serif; color: #000; padding: 20px; line-height: 1.2; font-size: 10px; }
         .header { text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 20px; position: relative; }
         .header img { position: absolute; left: 0; top: 0; width: 60px; }
         .header h2 { margin: 0; text-transform: uppercase; font-size: 16px; }

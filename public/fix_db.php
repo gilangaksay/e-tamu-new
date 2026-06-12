@@ -12,7 +12,7 @@ $db   = "e_tamu";
 $mysqli = new mysqli($host, $user, $pass, $db);
 
 if ($mysqli->connect_error) {
-    die("<div style='color:red; font-family:sans-serif; padding:20px; border:1px solid red; border-radius:10px; background:#fff1f1;'>
+    die("<div style='color:red; font-family:\"Times New Roman\", Times, serif; padding:20px; border:1px solid red; border-radius:10px; background:#fff1f1;'>
             <h3>Koneksi Database Gagal!</h3>
             <p>Pesan Error: " . $mysqli->connect_error . "</p>
             <p>Pastikan MySQL di XAMPP sudah menyala dan nama database sudah benar.</p>
@@ -27,7 +27,7 @@ $queries = [
     "ALTER TABLE tamu ADD COLUMN IF NOT EXISTS usia VARCHAR(10) DEFAULT NULL AFTER disabilitas"
 ];
 
-echo "<div style='font-family:sans-serif; padding:20px; max-width:800px; margin:20px auto; border:1px solid #ddd; border-radius:10px; box-shadow:0 10px 30px rgba(0,0,0,0.05);'>";
+echo "<div style='font-family:\"Times New Roman\", Times, serif; padding:20px; max-width:800px; margin:20px auto; border:1px solid #ddd; border-radius:10px; box-shadow:0 10px 30px rgba(0,0,0,0.05);'>";
 echo "<h2 style='color:#4f46e5;'>Database Fixer</h2>";
 echo "<p style='color:#666;'>Mengeksekusi pembaruan tabel tamu...</p><hr style='border:none; border-top:1px solid #eee; margin:20px 0;'>";
 

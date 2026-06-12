@@ -11,7 +11,7 @@
 body {
     background: var(--light);
     color: var(--dark);
-    font-family: 'Inter', sans-serif;
+    font-family: 'Times New Roman', Times, serif;
     overflow-x: hidden;
 }
 

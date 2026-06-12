@@ -3,13 +3,12 @@
 <head>
     <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= esc($title ?? 'Admin') ?> - E-Tamu Dashboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
     <link href="<?= base_url('assets/css/modern.css') ?>" rel="stylesheet">
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #f8fafc; }
+        body { font-family: 'Times New Roman', Times, serif; background: #f8fafc; }
         .sidebar { position: fixed; top: 0; left: 0; width: 280px; height: 100vh; background: #0f172a; z-index: 1000; padding: 2rem 1.5rem; color: white; transition: all 0.3s; display: flex; flex-direction: column; }
         .top-header { position: fixed; top: 0; left: 280px; right: 0; height: 70px; background: rgba(255,255,255,0.8); backdrop-filter: blur(10px); border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; padding: 0 2rem; z-index: 999; }
         .main-content { margin-left: 280px; margin-top: 70px; padding: 2rem; }

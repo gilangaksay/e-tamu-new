@@ -18,7 +18,7 @@
         body {
             height: 100%;
             background: #fafafa;
-            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-family: 'Times New Roman', Times, serif;
             color: #777;
             font-weight: 300;
         }

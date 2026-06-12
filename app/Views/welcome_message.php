@@ -19,7 +19,7 @@
         }
         html, body {
             color: rgba(33, 37, 41, 1);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+            font-family: 'Times New Roman', Times, serif;
             font-size: 16px;
             margin: 0;
             padding: 0;

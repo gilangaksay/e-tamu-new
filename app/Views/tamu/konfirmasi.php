@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Berhasil - E-Tamu</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <link href="<?= base_url('assets/css/modern.css') ?>" rel="stylesheet">
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #fdfdff; height: 100vh; display: flex; align-items: center; justify-content: center; }
+        body { font-family: 'Times New Roman', Times, serif; background: #fdfdff; height: 100vh; display: flex; align-items: center; justify-content: center; }
         .success-card { max-width: 450px; width: 100%; }
         .antrian-number { font-size: 6rem; line-height: 1; margin-bottom: 1.5rem; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     </style>

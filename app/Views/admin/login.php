@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Admin - E-Tamu</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <link href="<?= base_url('assets/css/modern.css') ?>" rel="stylesheet">
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: url('<?= base_url('assets/img/login.png') ?>') center/cover no-repeat; height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
+        body { font-family: 'Times New Roman', Times, serif; background: url('<?= base_url('assets/img/login.png') ?>') center/cover no-repeat; height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
         body::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); z-index: 1; }
         .login-card { width: 100%; max-width: 400px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border-radius: 32px; padding: 3rem; box-shadow: 0 40px 100px -20px rgba(0,0,0,0.3); position: relative; z-index: 2; }
         .form-label { font-weight: 700; color: #475569; font-size: 0.85rem; }

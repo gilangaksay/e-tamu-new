@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $s['nama_instansi'] ?> - Digital Guest Book</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <link href="<?= base_url('assets/css/modern.css') ?>" rel="stylesheet">
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: url('<?= base_url('assets/img/gedung.png') ?>') center/cover no-repeat fixed; min-height: 100vh; }
+        body { font-family: 'Times New Roman', Times, serif; background: url('<?= base_url('assets/img/gedung.png') ?>') center/cover no-repeat fixed; min-height: 100vh; }
         .hero-section { position: relative; z-index: 2; padding: 60px 0 100px; color: white; background: rgba(15, 23, 42, 0.3); backdrop-filter: blur(15px); border-bottom: 1px solid rgba(255,255,255,0.1); }
         .hero-content { position: relative; z-index: 2; }
         .form-container { margin-top: -60px; position: relative; z-index: 10; padding-bottom: 50px; }
