@@ -3,7 +3,8 @@ use App\Models\TamuModel;
 
 class Pengaturan extends BaseController {
     public function index() {
-        if (session()->get('admin_role') != 'admin') return redirect()->to(site_url('admin/dashboard'))->with('error', 'Akses ditolak');
+        if (session()->get('admin_role') != 'admin') return redirect()->to(site_url('admin/dashboard'))
+            ->with('error', 'Akses ditolak');
         $db = \Config\Database::connect();
         $settings = $db->table('pengaturan')->get()->getResultArray();
         $data = [];
@@ -16,7 +17,8 @@ class Pengaturan extends BaseController {
     }
 
     public function update() {
-        if (session()->get('admin_role') != 'admin') return redirect()->to(site_url('admin/dashboard'))->with('error', 'Akses ditolak');
+        if (session()->get('admin_role') != 'admin') return redirect()
+            ->to(site_url('admin/dashboard'))->with('error', 'Akses ditolak');
         $db = \Config\Database::connect();
         $posts = $this->request->getPost();
         

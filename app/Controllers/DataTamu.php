@@ -27,15 +27,23 @@ class DataTamu extends BaseController {
         // Validasi input wajib
         if (!$this->validate([
             'no_identitas' => 'required|exact_length[16]|numeric',
-            'no_telp'      => 'required',
+            'no_telp'      => 'required|min_length[10]|max_length[14]|numeric',
             'nama'         => 'required'
         ])) {
-            return $this->response->setJSON(['success' => false, 'message' => 'NIK harus 16 digit angka dan data wajib diisi.']);
+            $validation = \Config\Services::validation();
+            $errorMsg = 'Data wajib diisi.';
+            if ($validation->hasError('no_identitas')) {
+                $errorMsg = 'NIK harus 16 digit angka.';
+            } elseif ($validation->hasError('no_telp')) {
+                $errorMsg = 'Nomor HP harus berupa 10 sampai 14 digit angka.';
+            }
+            return $this->response->setJSON(['success' => false, 'message' => $errorMsg]);
         }
 
         // Jika role petugas, kunci field identitas dan demografi (HANYA boleh ubah tujuan/keperluan)
         if (session()->get('admin_role') === 'petugas') {
-            unset($data['nama'], $data['no_identitas'], $data['no_telp'], $data['instansi'], $data['jenis_kelamin'], $data['disabilitas'], $data['usia']);
+            unset($data['nama'], $data['no_identitas'], $data['no_telp'], $data['instansi'],
+             $data['jenis_kelamin'], $data['disabilitas'], $data['usia']);
         }
         
         // Pastikan pegawai_id bernilai null jika yang dimasukkan adalah teks manual (bukan ID)

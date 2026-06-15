@@ -192,7 +192,13 @@ function format_indo($date) {
                     <?php $isPetugas = (session()->get('admin_role') === 'petugas'); ?>
                     <div class="col-12"><label class="form-label small fw-800 text-muted">Nama Lengkap</label><input type="text" name="nama" id="nama" class="form-control rounded-3" required <?= $isPetugas ? 'readonly style="opacity:0.6; cursor:not-allowed;"' : '' ?>></div>
                     <div class="col-6"><label class="form-label small fw-800 text-muted">NIK / KTP</label><input type="text" name="no_identitas" id="no_identitas" class="form-control rounded-3" minlength="16" maxlength="16" pattern="\d{16}" title="NIK harus berjumlah 16 digit angka" required <?= $isPetugas ? 'readonly style="opacity:0.6; cursor:not-allowed;"' : '' ?>></div>
-                    <div class="col-6"><label class="form-label small fw-800 text-muted">Nomor HP / WhatsApp</label><input type="tel" name="no_telp" id="no_telp" class="form-control rounded-3" required <?= $isPetugas ? 'readonly style="opacity:0.6; cursor:not-allowed;"' : '' ?>></div>
+                    <div class="col-6">
+                        <label class="form-label small fw-800 text-muted">Nomor HP / WhatsApp</label>
+                        <input type="tel" name="no_telp" id="no_telp" class="form-control rounded-3" minlength="10" maxlength="14" pattern="\d{10,14}" title="Nomor HP harus berupa 10 sampai 14 digit angka" oninput="validateNoTelp(this)" required <?= $isPetugas ? 'readonly style="opacity:0.6; cursor:not-allowed;"' : '' ?>>
+                        <div id="telp-error" class="text-danger extra-small mt-2 fw-bold" style="display:none;">
+                            <i class="bi bi-exclamation-circle-fill me-1"></i> Nomor HP harus berupa 10 sampai 14 digit angka
+                        </div>
+                    </div>
                     <div class="col-12"><label class="form-label small fw-800 text-muted">Instansi</label><input type="text" name="instansi" id="instansi" class="form-control rounded-3" <?= $isPetugas ? 'readonly style="opacity:0.6; cursor:not-allowed;"' : '' ?>></div>
                     <div class="col-12">
                         <label class="form-label small fw-800 text-muted">Orang yang Dituju</label>
@@ -321,7 +327,30 @@ function format_indo($date) {
         document.getElementById('usia_edit').value = data.usia || '21-30'; 
         tamuModal.show(); 
     }
-    function saveTamu() { const formData = new FormData(document.getElementById('formTamu')); formData.append('<?= csrf_token() ?>', '<?= csrf_hash() ?>'); fetch('<?= site_url('admin/data-tamu/update') ?>', { method: 'POST', body: formData }).then(r => r.json()).then(d => { if(d.success) { location.reload(); } else { Swal.fire({ title: 'Gagal!', text: d.message, icon: 'error', confirmButtonColor: '#4f46e5' }); } }); }
+    function validateNoTelp(input) {
+        const errorDiv = document.getElementById('telp-error');
+        if (!errorDiv) return;
+        input.value = input.value.replace(/[^0-9]/g, '');
+        
+        if (input.value.length > 0 && (input.value.length < 10 || input.value.length > 14)) {
+            errorDiv.style.display = 'block';
+            input.classList.add('is-invalid');
+        } else {
+            errorDiv.style.display = 'none';
+            input.classList.remove('is-invalid');
+        }
+    }
+    function saveTamu() {
+        const telpInput = document.getElementById('no_telp');
+        if (telpInput && (telpInput.value.length < 10 || telpInput.value.length > 14)) {
+            Swal.fire({ title: 'Gagal!', text: 'Nomor HP harus berupa 10 sampai 14 digit angka.', icon: 'error', confirmButtonColor: '#4f46e5' });
+            telpInput.focus();
+            return;
+        }
+        const formData = new FormData(document.getElementById('formTamu'));
+        formData.append('<?= csrf_token() ?>', '<?= csrf_hash() ?>');
+        fetch('<?= site_url('admin/data-tamu/update') ?>', { method: 'POST', body: formData }).then(r => r.json()).then(d => { if(d.success) { location.reload(); } else { Swal.fire({ title: 'Gagal!', text: d.message, icon: 'error', confirmButtonColor: '#4f46e5' }); } });
+    }
     function showFoto(url) { Swal.fire({ imageUrl: url, imageAlt: 'Selfie Tamu', showConfirmButton: false, customClass: { image: 'rounded-5 border-white border-5 shadow-2xl' } }); }
     function updateStatus(id, status) { fetch('<?= site_url('admin/data-tamu/update-status') ?>', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: `id=${id}&status=${status}&<?= csrf_token() ?>=<?= csrf_hash() ?>` }).then(r => r.json()).then(d => { if(d.success) location.reload(); }); }
     function deleteTamu(id) { Swal.fire({ title: 'Hapus data?', text: 'Proses ini tidak dapat dibatalkan', icon: 'warning', showCancelButton: true, confirmButtonColor: '#4f46e5', cancelButtonColor: '#f43f5e', confirmButtonText: 'Ya, Hapus!', cancelButtonText: 'Batal' }).then((res) => { if(res.isConfirmed) fetch('<?= site_url('admin/data-tamu/delete') ?>', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: `id=${id}&<?= csrf_token() ?>=<?= csrf_hash() ?>` }).then(r => r.json()).then(d => { if(d.success) { document.getElementById('row-'+id).remove(); Swal.fire({ title: 'Terhapus!', icon: 'success', toast: true, position: 'top-end', showConfirmButton: false, timer: 1500 }); } }); }); }

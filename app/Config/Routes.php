@@ -32,3 +32,4 @@ $routes->post('admin/pegawai/store', 'Pegawai::store');
 $routes->post('admin/pegawai/update', 'Pegawai::update');
 $routes->post('admin/pegawai/delete', 'Pegawai::delete');
 
+$routes->addRedirect('admin', 'admin/login');

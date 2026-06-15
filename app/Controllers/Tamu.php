@@ -17,9 +17,17 @@ class Tamu extends BaseController {
     public function submit() {
         if (!$this->validate([
             'no_identitas' => 'required|exact_length[16]|numeric',
-            'no_telp'      => 'required'
+            'no_telp'      => 'required|min_length[10]|max_length[14]|numeric'
         ])) {
-            return redirect()->back()->withInput()->with('error', 'NIK harus 16 digit angka.');
+            $validation = \Config\Services::validation();
+            $errorMsg = '';
+            if ($validation->hasError('no_identitas')) {
+                $errorMsg .= 'NIK harus 16 digit angka. ';
+            }
+            if ($validation->hasError('no_telp')) {
+                $errorMsg .= 'Nomor HP harus berupa 10 sampai 14 digit angka.';
+            }
+            return redirect()->back()->withInput()->with('error', trim($errorMsg));
         }
 
         $model = new TamuModel();

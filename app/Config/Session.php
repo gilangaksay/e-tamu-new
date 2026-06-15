@@ -125,4 +125,16 @@ class Session extends BaseConfig
      * seconds.
      */
     public int $lockMaxRetries = 300;
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        if (getenv('SESSION_DRIVER')) {
+            if (getenv('SESSION_DRIVER') === 'database') {
+                $this->driver = \CodeIgniter\Session\Handlers\DatabaseHandler::class;
+                $this->savePath = getenv('SESSION_SAVE_PATH') ?: 'ci_sessions';
+            }
+        }
+    }
 }

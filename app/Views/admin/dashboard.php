@@ -3,20 +3,26 @@
 <!-- Ultra-Modern Welcome Section -->
 <div class="row mb-5">
     <div class="col-12">
-        <div class="modern-card p-0 border-0 shadow-lg overflow-hidden position-relative" style="background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); min-height: 200px;">
+        <div class="modern-card p-0 border-0 shadow-lg overflow-hidden position-relative" style="background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+         min-height: 200px;">
             <div class="p-4 p-md-5 position-relative" style="z-index: 3;">
                 <div class="d-flex align-items-center gap-3 mb-3">
-                    <div class="rounded-pill px-3 py-1 bg-white bg-opacity-20 small fw-bold text-white border border-white border-opacity-25" style="backdrop-filter: blur(5px);">
+                    <div class="rounded-pill px-3 py-1 bg-white bg-opacity-20 small fw-bold text-white border border-white border-opacity-25" style="backdrop-filter: 
+                    blur(5px);">
                         <i class="bi bi-stars me-1 text-warning"></i> Dashboard Aktivitas
                     </div>
                 </div>
                 <h1 class="display-6 fw-800 text-white mb-2">Halo, <?= explode(' ', session()->get('admin_nama'))[0] ?>! 👋</h1>
-                <p class="text-white text-opacity-75 lead mb-0" style="font-size: 1.1rem;">Semua sistem berjalan <span class="badge bg-success bg-opacity-25 text-white border border-white border-opacity-25">Normal</span>. Ada <?= $statusCounts['waiting'] ?> tamu menunggu konfirmasi Anda.</p>
+                <p class="text-white text-opacity-75 lead mb-0" style="font-size: 1.1rem;">Semua sistem berjalan <span class=
+                "badge bg-success bg-opacity-25 text-white border border-white border-opacity-25">Normal</span>. Ada <?= $statusCounts['waiting'] ?>
+                 tamu menunggu konfirmasi Anda.</p>
             </div>
             
             <!-- Abstract background shapes -->
-            <div class="position-absolute" style="top: -50px; right: -50px; width: 250px; height: 250px; background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%); border-radius: 50%;"></div>
-            <div class="position-absolute" style="bottom: -20px; left: 10%; width: 150px; height: 150px; background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%); border-radius: 50%;"></div>
+            <div class="position-absolute" style="top: -50px; right: -50px; width: 250px; height: 250px;
+             background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%); border-radius: 50%;"></div>
+            <div class="position-absolute" style="bottom: -20px; left: 10%; width: 150px; height: 150px; 
+            background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%); border-radius: 50%;"></div>
             <i class="bi bi-activity position-absolute text-white opacity-25" style="right: 30px; bottom: 20px; font-size: 6rem;"></i>
         </div>
     </div>
@@ -32,10 +38,14 @@
                     <p class="text-muted extra-small m-0">Ringkasan grafik <?= ucfirst($currentRange) ?></p>
                 </div>
                 <div class="d-flex gap-1 bg-light p-1 rounded-3">
-                    <a href="?range=harian" class="btn btn-sm <?= $currentRange == 'harian' ? 'btn-primary shadow-sm' : 'btn-light border-0' ?> fw-bold px-3">Harian</a>
-                    <a href="?range=mingguan" class="btn btn-sm <?= $currentRange == 'mingguan' ? 'btn-primary shadow-sm' : 'btn-light border-0' ?> fw-bold px-3">Mingguan</a>
-                    <a href="?range=bulanan" class="btn btn-sm <?= $currentRange == 'bulanan' ? 'btn-primary shadow-sm' : 'btn-light border-0' ?> fw-bold px-3">Bulanan</a>
-                    <a href="?range=tahunan" class="btn btn-sm <?= $currentRange == 'tahunan' ? 'btn-primary shadow-sm' : 'btn-light border-0' ?> fw-bold px-3">Tahunan</a>
+                    <a href="?range=harian" class="btn btn-sm <?= $currentRange == 'harian' ? 'btn-primary shadow-sm' :
+                     'btn-light border-0' ?> fw-bold px-3">Harian</a>
+                    <a href="?range=mingguan" class="btn btn-sm <?= $currentRange == 'mingguan' ? 'btn-primary shadow-sm' : 
+                    'btn-light border-0' ?> fw-bold px-3">Mingguan</a>
+                    <a href="?range=bulanan" class="btn btn-sm <?= $currentRange == 'bulanan' ? 'btn-primary shadow-sm' :
+                     'btn-light border-0' ?> fw-bold px-3">Bulanan</a>
+                    <a href="?range=tahunan" class="btn btn-sm <?= $currentRange == 'tahunan' ? 'btn-primary shadow-sm' :
+                     'btn-light border-0' ?> fw-bold px-3">Tahunan</a>
                 </div>
             </div>
             <div style="height: 320px;">
@@ -107,7 +117,8 @@
                         <tr>
                             <td class="ps-4">
                                 <div class="d-flex align-items-center gap-3">
-                                    <div class="rounded-circle border d-flex align-items-center justify-content-center fw-800 text-white" style="width:40px; height:40px; background: linear-gradient(45deg, #4f46e5, #7c3aed); font-size:0.75rem;">
+                                    <div class="rounded-circle border d-flex align-items-center justify-content-center fw-800 text-white" 
+                                    style="width:40px; height:40px; background: linear-gradient(45deg, #4f46e5, #7c3aed); font-size:0.75rem;">
                                         <?= substr($t['nama'], 0, 1) ?>
                                     </div>
                                     <div>
@@ -128,7 +139,8 @@
                                     if($t['status'] == 'dibatalkan') $stClass = 'bg-danger';
                                 ?>
                                 <div class="text-center">
-                                    <span class="badge <?= $stClass ?> bg-opacity-10 <?= str_replace('bg', 'text', $stClass) ?> rounded-pill px-3 fw-bold border-0 text-uppercase" style="font-size:0.6rem;">
+                                    <span class="badge <?= $stClass ?> bg-opacity-10 <?= str_replace('bg', 'text', $stClass) ?> 
+                                    rounded-pill px-3 fw-bold border-0 text-uppercase" style="font-size:0.6rem;">
                                         <?= $t['status'] ?>
                                     </span>
                                 </div>

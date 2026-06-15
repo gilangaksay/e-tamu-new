@@ -7,22 +7,28 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <link href="<?= base_url('assets/css/modern.css') ?>" rel="stylesheet">
     <style>
-        body { font-family: 'Times New Roman', Times, serif; background: url('<?= base_url('assets/img/gedung.png') ?>') center/cover no-repeat fixed; min-height: 100vh; }
-        .hero-section { position: relative; z-index: 2; padding: 60px 0 100px; color: white; background: rgba(15, 23, 42, 0.3); backdrop-filter: blur(15px); border-bottom: 1px solid rgba(255,255,255,0.1); }
+        body { font-family: 'Times New Roman', Times, serif; background: url('<?= base_url('assets/img/gedung.png') ?>')
+             center/cover no-repeat fixed; min-height: 100vh; }
+        .hero-section { position: relative; z-index: 2; padding: 60px 0 100px; color: white; background: rgba(15, 23, 42, 0.3); 
+            backdrop-filter: blur(15px); border-bottom: 1px solid rgba(255,255,255,0.1); }
         .hero-content { position: relative; z-index: 2; }
         .form-container { margin-top: -60px; position: relative; z-index: 10; padding-bottom: 50px; }
-        .logo-img { width: 80px; height: 80px; border-radius: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); margin-bottom: 1.5rem; background: white; padding: 10px; object-fit: contain; }
+        .logo-img { width: 80px; height: 80px; border-radius: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); 
+            margin-bottom: 1.5rem; background: white; padding: 10px; object-fit: contain; }
         .modern-card { border-radius: 32px; box-shadow: 0 40px 100px -20px rgba(0,0,0,0.08); }
         .form-label { font-weight: 700; color: #475569; margin-bottom: 0.5rem; font-size: 0.85rem; }
         .form-control, .form-select { background: #f1f5f9; border: 2px solid transparent; padding: 14px 20px; border-radius: 16px; font-weight: 500; }
         .form-control:focus { border-color: var(--primary); background: #fff; box-shadow: 0 10px 20px rgba(99,102,241,0.05); }
         .form-control.is-invalid { border-color: #ef4444; background: #fef2f2; }
         .form-control.is-invalid:focus { box-shadow: 0 10px 20px rgba(239, 68, 68, 0.05); }
-        .camera-trigger { border: 2px dashed #cbd5e1; background: #f8fafc; border-radius: 24px; padding: 0; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); min-height: 180px; cursor: pointer; position: relative; overflow: hidden; }
+        .camera-trigger { border: 2px dashed #cbd5e1; background: #f8fafc; border-radius: 24px; padding: 
+            0; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); min-height:
+             180px; cursor: pointer; position: relative; overflow: hidden; }
         .camera-trigger:hover { border-color: var(--primary); background: white; }
         .preview-box { width: 100%; border-radius: 20px; border: 4px solid #fff; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
         #video { width: 100%; border-radius: 24px; background: #000; transform: scaleX(-1); }
-        .btn-capture { width: 70px; height: 70px; border-radius: 50%; background: #fff; border: 6px solid rgba(0,0,0,0.1); position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); box-shadow: 0 0 0 4px #fff; }
+        .btn-capture { width: 70px; height: 70px; border-radius: 50%; background: #fff; border: 6px solid rgba(0,0,0,0.1); position: absolute;
+             bottom: 20px; left: 50%; transform: translateX(-50%); box-shadow: 0 0 0 4px #fff; }
     </style>
 </head>
 <body>
@@ -60,14 +66,21 @@
                             </div>
                             <div class="mb-4">
                                 <label class="form-label">Nomor Identitas (NIK/KTP)</label>
-                                <input type="text" name="no_identitas" id="no_identitas" class="form-control" placeholder="16 Digit NIK" minlength="16" maxlength="16" pattern="\d{16}" title="NIK harus berjumlah 16 digit angka" oninput="validateNIK(this)" required>
+                                <input type="text" name="no_identitas" id="no_identitas" class="form-control" 
+                                  placeholder="16 Digit NIK" minlength="16" maxlength="16" pattern="\d{16}"
+                                 title="NIK harus berjumlah 16 digit angka" oninput="validateNIK(this)" required>
                                 <div id="nik-error" class="text-danger extra-small mt-2 fw-bold" style="display:none;">
                                     <i class="bi bi-exclamation-circle-fill me-1"></i> NIK harus berjumlah 16 digit angka
                                 </div>
                             </div>
                             <div class="mb-4">
                                 <label class="form-label">Nomor HP / WhatsApp</label>
-                                <input type="tel" name="no_telp" class="form-control" placeholder="Contoh: 081234567890" required>
+                                <input type="tel" name="no_telp" id="no_telp" class="form-control" 
+                                  placeholder="Contoh: 081234567890" minlength="10" maxlength="14" pattern="\d{10,14}"
+                                  title="Nomor HP harus berupa 10 sampai 14 digit angka" oninput="validateNoTelp(this)" required>
+                                <div id="telp-error" class="text-danger extra-small mt-2 fw-bold" style="display:none;">
+                                    <i class="bi bi-exclamation-circle-fill me-1"></i> Nomor HP harus berupa 10 sampai 14 digit angka
+                                </div>
                             </div>
 
                             <!-- Kategori Section -->
@@ -120,7 +133,8 @@
                             </div>
                             <div class="mb-5">
                                 <label class="form-label">Alasan Keperluan</label>
-                                <textarea name="keterangan" class="form-control" rows="3" placeholder="Jelaskan secara singkat alasan kunjungan Anda..." required></textarea>
+                                <textarea name="keterangan" class="form-control" rows="3" 
+                                placeholder="Jelaskan secara singkat alasan kunjungan Anda..." required></textarea>
                             </div>
 
                             <!-- Integrated Selfie Section -->
@@ -176,7 +190,8 @@
                 <div class="modal-body p-0 position-relative bg-black" style="min-height: 400px;">
                     <video id="video" autoplay playsinline class="w-100"></video>
                     <div class="btn-capture" onclick="capture()"></div>
-                    <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-3 shadow" data-bs-dismiss="modal" onclick="stopCamera()"></button>
+                    <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-3 shadow"
+                     data-bs-dismiss="modal" onclick="stopCamera()"></button>
                 </div>
                 <div class="p-4 text-center bg-white">
                     <h6 class="fw-800 m-0 text-dark">Posisikan Wajah</h6>
@@ -213,6 +228,20 @@
             input.value = input.value.replace(/[^0-9]/g, '');
             
             if (input.value.length > 0 && input.value.length < 16) {
+                errorDiv.style.display = 'block';
+                input.classList.add('is-invalid');
+            } else {
+                errorDiv.style.display = 'none';
+                input.classList.remove('is-invalid');
+            }
+        }
+
+        function validateNoTelp(input) {
+            const errorDiv = document.getElementById('telp-error');
+            // Hanya izinkan angka
+            input.value = input.value.replace(/[^0-9]/g, '');
+            
+            if (input.value.length > 0 && (input.value.length < 10 || input.value.length > 14)) {
                 errorDiv.style.display = 'block';
                 input.classList.add('is-invalid');
             } else {
@@ -262,6 +291,12 @@
             if(nikInput.value.length < 16) {
                 alert("NIK harus berjumlah 16 digit angka.");
                 nikInput.focus();
+                return false;
+            }
+            const telpInput = document.getElementById('no_telp');
+            if(telpInput.value.length < 10 || telpInput.value.length > 14) {
+                alert("Nomor HP harus berupa 10 sampai 14 digit angka.");
+                telpInput.focus();
                 return false;
             }
             if(!fotoInput.value) { alert("Harap ambil foto selfie terlebih dahulu."); return false; }

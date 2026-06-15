@@ -199,6 +199,23 @@ class Database extends Config
         // we don't overwrite live data on accident.
         if (ENVIRONMENT === 'testing') {
             $this->defaultGroup = 'tests';
+        } else {
+            // Check for standard server environment variables (Vercel-compatible)
+            if (getenv('DB_HOST')) {
+                $this->default['hostname'] = getenv('DB_HOST');
+            }
+            if (getenv('DB_USER')) {
+                $this->default['username'] = getenv('DB_USER');
+            }
+            if (getenv('DB_PASS')) {
+                $this->default['password'] = getenv('DB_PASS');
+            }
+            if (getenv('DB_NAME')) {
+                $this->default['database'] = getenv('DB_NAME');
+            }
+            if (getenv('DB_PORT')) {
+                $this->default['port'] = (int) getenv('DB_PORT');
+            }
         }
     }
 }

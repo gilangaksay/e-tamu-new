@@ -182,7 +182,10 @@ class App extends BaseConfig
      *
      * @var array<string, string>
      */
-    public array $proxyIPs = [];
+    public array $proxyIPs = [
+        '0.0.0.0/0' => 'X-Forwarded-For',
+        '::/0'      => 'X-Forwarded-For',
+    ];
 
     /**
      * --------------------------------------------------------------------------
@@ -201,4 +204,27 @@ class App extends BaseConfig
      * @see http://www.w3.org/TR/CSP/
      */
     public bool $CSPEnabled = false;
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        if (getenv('APP_BASE_URL')) {
+            $this->baseURL = getenv('APP_BASE_URL');
+        } elseif (getenv('VERCEL_URL')) {
+            $this->baseURL = 'https://' . getenv('VERCEL_URL') . '/';
+        } elseif (isset($_SERVER['HTTP_HOST'])) {
+            // Detect protocol (http or https)
+            $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+                || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https')
+                ? 'https' : 'http';
+            
+            // For subfolder installations, we need to preserve the subfolder path from script name
+            $scriptName = $_SERVER['SCRIPT_NAME'] ?? '';
+            $subFolder = str_replace('/index.php', '', $scriptName);
+            $subFolder = rtrim($subFolder, '/') . '/';
+            
+            $this->baseURL = $protocol . '://' . $_SERVER['HTTP_HOST'] . $subFolder;
+        }
+    }
 }
